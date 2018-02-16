@@ -1,0 +1,19 @@
+{
+  "name": "sussex-final-year-bsc",
+  "version": "1.0.0",
+  "description": "Language teaching voice assistant",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rohan Bhayana",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/language": "^1.1.0",
+    "node-jre": "^0.2.3",
+    "node-rest-client": "^3.1.0",
+    "save": "^2.3.2",
+    "unirest": "^0.5.1",
+    "yargs": "^11.0.0"
+  }
+}
