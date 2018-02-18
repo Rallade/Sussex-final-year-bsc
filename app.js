@@ -12,7 +12,8 @@ console.log(sent);
 
 const document = {
     content: sent,
-    type: 'PLAIN_TEXT'
+    type: 'PLAIN_TEXT',
+    language: 'fr'
 };
 
 client
@@ -29,4 +30,3 @@ client
 	.catch(err => {
 		console.error(err)
 	});
-
