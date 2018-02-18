@@ -24,7 +24,7 @@ client
 		syntax.tokens.forEach(part => {
 			console.log(`${part.partOfSpeech.tag}: ${part.text.content}`);
 			console.log(`Morphology:`, part.partOfSpeech);
-			console.log(`Dependency:`, part.dependencyEdge);
+			console.log(`Dependency: ${part.text.content} is a ${part.dependencyEdge.label} of ${syntax.tokens[part.dependencyEdge.headTokenIndex].text.content}`);
 		});
 	})
 	.catch(err => {
