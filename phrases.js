@@ -1,3 +1,9 @@
+class Intent {
+	constructor(name){
+		this.name = name;
+	}
+}
+
 var greetings = ['bonjour', 'salut', 'coucou'];
 
 var goodbyes = ['au revoir', 'salut' ,'à plus'];
@@ -8,59 +14,67 @@ var completed_intents = [];
 
 var user_intents = ['GREET', 'NAME', 'AGE', 'OCCUPATION', 'ORIGINS', 'BYE'];
 
-var user_speaking = false;
+var formality = 0; //0 being very formal
 
-var start = false;
-var end = false;
+var user_details = {
+	'NAME': null,
+	'AGE': null,
+	'OCCUPATION': null,
+	'ORIGINS': null
+}
 
-var sys_int = null;
-var user_int = null;
+var user_speaking = true;
 
-function parse(sent){
-	if (!start){
-		for (let greet of greetings){
-			console.log(greet);
-			if (sent.includes(greet)){
-				start = true;
-				if (user_speaking){
-					get_intent(sent);
+var sys_int = [];
+var user_int = [];
 
-				}
-			}
-		}
-
-	} else {
-		for (let bye of goodbyes){
-			if (sent.includes(bye)){
-				end = true;
-				if(user_speaking){
-					//reply
-				}
-			}
-		}
+function process(sent){
+	if (user_speaking){
+		parse_int(sent);
+	}
+	gen_intent()
+	if(!user_speaking){
+		gen_response();
 	}
 
 }
 
 function gen_intent(){
-	if (!start){
-		start = true;
-		gen
+	if (user_int.length == 0 and sys_int.length == 0){
+		sys_int.push(system_intents[0]);
+		sys_int.push(system_intents[1]);
+	} else if (user_int.length > 0 && sys_int.length == 0) {
+		sys_int = JSON.parse(JSON.stringify(user_int)); //provides a deep copy of everything in the array
 	} else {
-		if (user_int == null){
-			sys_int = system_intents[0];
-		} else {
-			for(let intention for system_intents){
-				if (completed_intents.indexOf(intention) < 0){
-					sys_int = system_intents[0];
-					break;
-				}
+		for (let topic in user_int){
+			if(!completed_intents.includes(topic)){
+				sys_int.push(topic);
+				break;
 			}
 		}
-	} else {
-		gen_response();
 	}
 }
 
+function gen_response(){
+	resp = ''
+	for (let topic in sys_int){
+		completed_intents.push(topic)
+		resp+=(topic + " ");
+	}
+	return(resp);
+}
 
-parse('hello');
+function parse_intent(sent){
+	if(!completed_intents.includes('GREET')){
+		for (i = 0; i < greetings.length; i++){
+			if(sent.contains(greetings[0])){
+				formality = i;
+				user_int = 'GREET'
+			}
+		}
+	}
+
+	//Do natural language things here
+}
+
+process('Bonjour');
