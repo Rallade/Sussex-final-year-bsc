@@ -29,24 +29,29 @@ var sys_int = [];
 var user_int = [];
 
 function process(sent){
+	console.log(`processing ${sent}`)
 	if (user_speaking){
-		parse_int(sent);
+		parse_intent(sent.toLowerCase());
 	}
-	gen_intent()
+	user_speaking = false;
+	//user_int = ['GREET', 'NAME'] //for testing purposes
 	if(!user_speaking){
-		gen_response();
+		gen_intent();
+		console.log(`User: ${user_int}`);
+		console.log(`System: ${sys_int}`);
+		console.log(`Response ${gen_response()}`);
 	}
 
 }
 
 function gen_intent(){
-	if (user_int.length == 0 and sys_int.length == 0){
+	if (user_int.length == 0 && sys_int.length == 0){
 		sys_int.push(system_intents[0]);
 		sys_int.push(system_intents[1]);
 	} else if (user_int.length > 0 && sys_int.length == 0) {
 		sys_int = JSON.parse(JSON.stringify(user_int)); //provides a deep copy of everything in the array
 	} else {
-		for (let topic in user_int){
+		for (topic of user_int){
 			if(!completed_intents.includes(topic)){
 				sys_int.push(topic);
 				break;
@@ -57,19 +62,27 @@ function gen_intent(){
 
 function gen_response(){
 	resp = ''
-	for (let topic in sys_int){
+	console.log(sys_int);
+	answer_user();
+	for (topic of sys_int){
+		console.log(topic);
 		completed_intents.push(topic)
 		resp+=(topic + " ");
 	}
 	return(resp);
 }
 
+function answer_user(){
+
+}
+
 function parse_intent(sent){
 	if(!completed_intents.includes('GREET')){
 		for (i = 0; i < greetings.length; i++){
-			if(sent.contains(greetings[0])){
+			if(sent.includes(greetings[0])){
 				formality = i;
-				user_int = 'GREET'
+				user_int.push('GREET');
+				break;
 			}
 		}
 	}
