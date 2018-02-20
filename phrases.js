@@ -20,7 +20,8 @@ var user_details = {
 	'NAME': null,
 	'AGE': null,
 	'OCCUPATION': null,
-	'ORIGINS': null
+	'ORIGINS': null,
+	'GENDER': null
 }
 
 var user_speaking = true;
@@ -34,7 +35,7 @@ function process(sent){
 		parse_intent(sent.toLowerCase());
 	}
 	user_speaking = false;
-	//user_int = ['GREET', 'NAME'] //for testing purposes
+	user_int = ['GREET', 'NAME']; //for testing purposes
 	if(!user_speaking){
 		gen_intent();
 		console.log(`User: ${user_int}`);
@@ -63,7 +64,8 @@ function gen_intent(){
 function gen_response(){
 	resp = ''
 	console.log(sys_int);
-	answer_user();
+	//resp += answer_user().toString();
+	resp += answer_user().toString();
 	for (topic of sys_int){
 		console.log(topic);
 		completed_intents.push(topic)
@@ -73,7 +75,14 @@ function gen_response(){
 }
 
 function answer_user(){
+	var answer = []
+	for(intent of user_int){
+		if(intent != 'GREET'){
+			answer.push(intent + '_ANSWER, ')
+		}//create response
+	}
 
+	return answer;
 }
 
 function parse_intent(sent){
@@ -90,4 +99,4 @@ function parse_intent(sent){
 	//Do natural language things here
 }
 
-process('Bonjour');
+process(' ');
