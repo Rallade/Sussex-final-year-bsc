@@ -1,3 +1,4 @@
+const google = require('./google');
 
 var greetings = ['bonjour', 'salut', 'coucou'];
 
@@ -24,74 +25,81 @@ var user_speaking = true;
 var sys_int = [];
 var user_int = [];
 
-function process(sent){
-	console.log(`processing ${sent}`)
-	if (user_speaking){
-		parse_intent(sent.toLowerCase());
-	}
-	user_speaking = false;
-	user_int = ['GREET', 'NAME']; //for testing purposes
-	if(!user_speaking){
-		gen_intent();
-		console.log(`User: ${user_int}`);
-		console.log(`System: ${sys_int}`);
-		console.log(`Response ${gen_response()}`);
-	}
 
+function process2(data){
+  data.sent = data.sent.toLowerCase();
+	var a = google.analyze(data.sent)
+  	.then(function(analysis) {
+  		data.analysis = analysis;
+  		data = parse_intent(data);
+  		gen_intent(data);
+  		gen_response(data);
+  		return data;
+  	}).catch((err) => {
+  		console.log(err);
+  	});
+  return(a);
 }
 
-function gen_intent(){
-	if (user_int.length == 0 && sys_int.length == 0){
-		sys_int.push(system_intents[0]);
-		sys_int.push(system_intents[1]);
-	} else if (user_int.length > 0 && sys_int.length == 0) {
-		sys_int = JSON.parse(JSON.stringify(user_int)); //provides a deep copy of everything in the array
+function gen_intent(data){
+	if (data.user_int.length == 0 && data.sys_int.length == 0){
+		data.sys_int.push(system_intents[0]);
+		data.sys_int.push(system_intents[1]);
+	} else if (data.user_int.length > 0 && data.sys_int.length == 0) {
+		data.sys_int = JSON.parse(JSON.stringify(data.user_int)); //provides a deep copy of everything in the array
 	} else {
-		for (topic of user_int){
-			if(!completed_intents.includes(topic)){
-				sys_int.push(topic);
+		for (topic of data.user_int){
+			if(!data.completed_intents.includes(topic)){
+				data.sys_int.push(topic);
 				break;
 			}
 		}
 	}
+  return data;
 }
 
-function gen_response(){
+function gen_response(data){
 	resp = ''
-	console.log(sys_int);
-	//resp += answer_user().toString();
-	resp += answer_user().toString();
-	for (topic of sys_int){
-		console.log(topic);
-		completed_intents.push(topic)
-		resp+=(topic + " ");
-	}
-	return(resp);
+	resp += answer_user(data.user_int).toString();
+  for (topic of data.sys_int){
+    data.completed_intents.push(topic)
+    resp+=(topic + " ");
+  }
+  return(resp);
+
 }
 
-function answer_user(){
+function answer_user(user_int){
 	var answer = []
 	for(intent of user_int){
 		if(intent != 'GREET'){
 			answer.push(intent + '_ANSWER, ')
 		}//create response
 	}
-
-	return answer;
+  return answer;
 }
 
-function parse_intent(sent){
-	if(!completed_intents.includes('GREET')){
+function parse_intent(data){
+	if(!data.completed_intents.includes('GREET')){
 		for (i = 0; i < greetings.length; i++){
-			if(sent.includes(greetings[0])){
-				formality = i;
-				user_int.push('GREET');
+			if(data.sent.includes(greetings[i])){
+				data.formality = i;
+				data.user_int.push('GREET');
 				break;
 			}
 		}
 	}
-
-	//Do natural language things here
+  return data;
 }
 
-process(' ');
+data = {
+  sent: ' ',
+  sys_int: [],
+  user_int: [],
+  completed_intents: [],
+  formality: 0
+}
+
+process2(data).then((data2) => {
+  console.log(data2)
+})

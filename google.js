@@ -11,11 +11,23 @@ var questionMarkers = ['est-ce', 'comment', 'quel ', 'quelle ', ' quoi', 'pourqu
 
 console.log(sent);
 
-const document = {
-    content: sent,
-    type: 'PLAIN_TEXT',
-    language: 'fr'
-};
+function analyze(sent) {
+  var document = {
+      content: sent,
+      type: 'PLAIN_TEXT',
+      language: 'fr'
+  };
+  return client
+  	.analyzeSyntax({document})
+  	.then(results => {
+      const syntax = results[0];
+      return parse(syntax);
+  	}).catch(err => {
+  		console.error(err)
+  	});
+}
+
+
 
 function parse(syntax){
   console.log('Parts of speech');
@@ -75,19 +87,10 @@ function parse(syntax){
       analysis.question = true;
     }
   });
-  analysis.keywords = shortened;
+  analysis.keywords = shortened;;
   return new Promise(function(resolve, reject) {
     resolve(analysis)
   });
 }
 
-client
-	.analyzeSyntax({document})
-	.then(results => {
-    const syntax = results[0];
-    return parse(syntax);
-	}).then((analysis) => {
-      console.log(analysis);
-  }).catch(err => {
-		console.error(err)
-	});
+module.exports.analyze = analyze
