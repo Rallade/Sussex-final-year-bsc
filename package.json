@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/language": "^1.1.0",
+    "express": "^4.16.2",
     "node-jre": "^0.2.3",
     "node-rest-client": "^3.1.0",
     "save": "^2.3.2",

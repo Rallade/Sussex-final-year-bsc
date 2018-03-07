@@ -26,7 +26,7 @@ var sys_int = [];
 var user_int = [];
 
 
-function process2(data){
+function process(data){
   data.sent = data.sent.toLowerCase();
 	var a = google.analyze(data.sent)
   	.then(function(analysis) {
@@ -92,14 +92,28 @@ function parse_intent(data){
   return data;
 }
 
+function createData(sent) {
+	return {
+		sent,
+		sys_int: [],
+		user_int: [],
+		completed_intents: [],
+		formality: 0
+	}
+}
+
 data = {
-  sent: ' ',
+  sent: 'Quel âge avez-vous',
   sys_int: [],
   user_int: [],
   completed_intents: [],
   formality: 0
 }
 
-process2(data).then((data2) => {
+process(data).then((data2) => {
   console.log(data2)
-})
+});
+
+
+module.exports.createData = createData;
+module.exports.process = process;
