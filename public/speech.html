@@ -5,15 +5,23 @@
     <title>Web Speech API</title>
     <style>
       body {
-        font-family: monospace;
-        font-size: 22px;
+        font-family: helvetica;
+        font-size: 50px;
+      }
+      div {
+        text-align: center;
+        padding-top: 35%;
       }
     </style>
   </head>
   <body>
-    <span id="speech"></span>
-    <span id="interim"></span>
+    <div>
+      <span id="speech"></span>
+      <span id="interim"></span>
+      <span id="response"></span>
+    </div>
   </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">
     function upgrade() {
       alert('Please use Google Chrome');
@@ -30,11 +38,12 @@
 
       speech.continuous = false;
       speech.interimResults = true;
-      speech.lang = 'en-US';
+      speech.lang = 'fr';
       speech.start();
 
       speech.onstart = function(){
         recognizing = true;
+        document.getElementById('response').innerHTML = '';
       }
 
       speech.onresult = function(event){
@@ -60,7 +69,19 @@
 
       speech.onend = function (){
         recognizing = false;
-        alert(spoken.innerHTML)
+        if(spoken.innerHTML != ''){
+          $.ajax({
+            type: 'POST',
+            url: 'http://' + window.location.host + '/process',
+            data: {
+              sent: spoken.innerHTML,
+              test: 'this is a test'
+            },
+            success: function (data) {
+              document.getElementById('response').innerHTML = data;
+            }
+          });
+        }
         reset();
       }
       function reset() {
