@@ -10,15 +10,25 @@
       }
       div {
         text-align: center;
-        padding-top: 35%;
+        padding-top: 25%;
+      }
+      .error {
+          background-color: #fc5944;
       }
     </style>
   </head>
   <body>
     <div>
-      <span id="speech"></span>
-      <span id="interim"></span>
-      <span id="response"></span>
+      <p>
+        <span id="speech"></span>
+        <span id="interim"></span>
+      </p>
+      <p>
+        <span id="result"></span>
+      </p>
+      <p>
+        <span id="response"></span>
+      </p>
     </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -33,6 +43,7 @@
       }
       spoken = document.getElementById('speech');
       guess = document.getElementById('interim');
+      actualSpoken = document.getElementById('result')
 
       speech = new webkitSpeechRecognition() || speechRecognition();
 
@@ -78,7 +89,22 @@
               test: 'this is a test'
             },
             success: function (data) {
-              document.getElementById('response').innerHTML = data;
+              document.getElementById('response').innerHTML = JSON.stringify(JSON.parse(data).sys_int);
+              actualSpoken.innerHTML = spoken.innerHTML;
+              spoken.innerHTML = '';
+              var offset = 0;
+              var startSpan = "<span class=\"error\">";
+              var endSpan = "</span>";
+              for (match of JSON.parse(data).grammar){
+                if (match.rule.issueType != 'typographical'){
+                  var start = match.offset + offset;
+                  actualSpoken.innerHTML = actualSpoken.innerHTML.slice(0, start) + startSpan + actualSpoken.innerHTML.slice(start);
+                  offset += startSpan.length;
+                  var end = match.offset + match.length + offset;
+                  actualSpoken.innerHTML = actualSpoken.innerHTML.slice(0, end) + endSpan + actualSpoken.innerHTML.slice(end);
+                  offset += endSpan.length;
+                }
+              }
             }
           });
         }
@@ -87,7 +113,7 @@
       function reset() {
         recog = false;
         guess.innerHTML = '';
-        spoken.innerHTML = '';
+        //spoken.innerHTML = '';
         speech.start();
       }
     }

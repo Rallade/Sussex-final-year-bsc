@@ -1,4 +1,6 @@
 const google = require('./google');
+const lt = require('./language-tool.js')
+const phrases = require('./phrases');
 
 var greetings = ['bonjour', 'salut', 'coucou'];
 
@@ -39,6 +41,18 @@ function process(data){
   		console.log(err);
   	});
   return(a);
+}
+
+var process2 = async (data) => {
+	grammar = await lt.checkGrammar(data.sent);
+	data.grammar = grammar;
+	data.sent = data.sent.toLowerCase();
+	analysis = await google.analyze(data.sent)
+	data.analysis = analysis;
+	data = parse_intent(data);
+	gen_intent(data);
+	gen_response(data);
+	return data;
 }
 
 function gen_intent(data){
@@ -102,18 +116,19 @@ function createData(sent) {
 	}
 }
 
-data = {
-  sent: 'Quel âge avez-vous',
-  sys_int: [],
-  user_int: [],
-  completed_intents: [],
-  formality: 0
-}
-
-process(data).then((data2) => {
-  console.log(data2)
-});
+// data = {
+//   sent: 'Quel âge avez-vous',
+//   sys_int: [],
+//   user_int: [],
+//   completed_intents: [],
+//   formality: 0
+// }
+//
+// process(data).then((data2) => {
+//   console.log(data2)
+// });
 
 
 module.exports.createData = createData;
 module.exports.process = process;
+module.exports.process2 = process2;

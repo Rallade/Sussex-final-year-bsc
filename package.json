@@ -10,10 +10,14 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/language": "^1.1.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "node-jre": "^0.2.3",
     "node-rest-client": "^3.1.0",
+    "r": "0.0.5",
     "save": "^2.3.2",
+    "string-similarity": "^1.2.0",
     "unirest": "^0.5.1",
     "yargs": "^11.0.0"
   }

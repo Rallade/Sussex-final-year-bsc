@@ -18,10 +18,10 @@ exp.use((req, res, next) => {
 exp.post('/process', (req, res) => {
   sent = req.body.sent;
   console.log(14, sent);
-  app.process(app.createData(sent))
+  app.process2(app.createData(sent))
     .then((analysis) => {
-      console.log(JSON.stringify(analysis));
-      res.send(JSON.stringify(analysis.sys_int, null, 4));
+      console.log(JSON.stringify(analysis, null, 4));
+      res.send(JSON.stringify(analysis, null, 4));
     });
 })
 

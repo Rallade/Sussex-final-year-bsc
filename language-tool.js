@@ -1,8 +1,5 @@
 var request = require("request");
 
-
-
-
 var checkGrammar = sent => {
   var options = {
     method: 'POST',
@@ -12,21 +9,21 @@ var checkGrammar = sent => {
        'content-type': 'application/x-www-form-urlencoded'
     },
     form: {
-      text: 'Cest du françaises',
+      text: sent,
       language: 'fr'
     }
   };
-
-  request(options, function (error, response, body) {
-    if (error) throw new Error(error);
-    if (JSON.parse(body).matches.length) {
-      console.log('there were errors');
-      console.log(JSON.parse(body).matches.length);
-    } else {
-      console.log('there were no errors');
-    }
-    console.log();
+  return new Promise(function(resolve, reject){
+    request(options, function (error, response, body) {
+      if (error){
+        reject(error);
+      } else {
+        resolve(JSON.parse(body).matches);
+        matches = JSON.parse(body).matches;
+      }
+    });
   });
-}
+  // RETURN A PROMISE OR THERE WILL BE HEADACHES
+};
 
 module.exports.checkGrammar = checkGrammar;
