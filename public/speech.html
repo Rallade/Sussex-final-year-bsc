@@ -89,7 +89,7 @@
               test: 'this is a test'
             },
             success: function (data) {
-              document.getElementById('response').innerHTML = JSON.stringify(JSON.parse(data).sys_int);
+              document.getElementById('response').innerHTML = JSON.stringify(JSON.parse(data).response);
               actualSpoken.innerHTML = spoken.innerHTML;
               spoken.innerHTML = '';
               var offset = 0;

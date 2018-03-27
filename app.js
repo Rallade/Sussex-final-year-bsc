@@ -1,6 +1,7 @@
 const google = require('./google');
 const lt = require('./language-tool.js')
 const phrases = require('./phrases');
+const stringSim = require('string-similarity');
 
 var greetings = ['bonjour', 'salut', 'coucou'];
 
@@ -52,6 +53,7 @@ var process2 = async (data) => {
 	data = parse_intent(data);
 	gen_intent(data);
 	gen_response(data);
+ 	console.log(JSON.stringify(data, null, 4));
 	return data;
 }
 
@@ -74,12 +76,13 @@ function gen_intent(data){
 
 function gen_response(data){
 	resp = ''
-	resp += answer_user(data.user_int).toString();
+	resp += answer_user(data.user_int).join(' ') + ' ';
   for (topic of data.sys_int){
     data.completed_intents.push(topic)
     resp+=(topic + " ");
   }
-  return(resp);
+	data.response = resp;
+  return(data);
 
 }
 
@@ -87,7 +90,7 @@ function answer_user(user_int){
 	var answer = []
 	for(intent of user_int){
 		if(intent != 'GREET'){
-			answer.push(intent + '_ANSWER, ')
+			answer.push(intent + '_ANSWER')
 		}//create response
 	}
   return answer;
@@ -99,9 +102,23 @@ function parse_intent(data){
 			if(data.sent.includes(greetings[i])){
 				data.formality = i;
 				data.user_int.push('GREET');
+				data.sent = data.sent.replace(greetings[i], '');
 				break;
 			}
 		}
+	}
+	var score = 0;
+  var type = '';
+  sents = phrases.phrases;
+  for(var [key, value] of Object.entries(sents)){
+    let temp = stringSim.compareTwoStrings(data.sent, key);
+    if(temp > score && temp > 0){
+      score = temp;
+      type = value;
+    }
+  }
+	if (type){
+		data.user_int.push(type);
 	}
   return data;
 }
