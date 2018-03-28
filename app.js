@@ -1,7 +1,8 @@
 const google = require('./google');
-const lt = require('./language-tool.js')
+const lt = require('./language-tool')
 const phrases = require('./phrases');
 const stringSim = require('string-similarity');
+const characters = require('./characters')
 
 var greetings = ['bonjour', 'salut', 'coucou'];
 
@@ -123,6 +124,11 @@ function parse_intent(data){
   return data;
 }
 
+function createResponse(data){
+	components = data.response.split(" ");
+
+}
+
 function createData(sent) {
 	return {
 		sent,
@@ -141,7 +147,7 @@ function createData(sent) {
 //   formality: 0
 // }
 //
-// process(data).then((data2) => {
+// process2(data).then((data2) => {
 //   console.log(data2)
 // });
 

@@ -1,6 +1,4 @@
-const _ = require('lodash');
-
-var user_intents = ['GREET', 'NAME', 'AGE', 'OCCUPATION', 'ORIGINS', 'BYE'];
+var user_intents = ['GREET', 'NAME', 'FEELING', 'AGE', 'OCCUPATION', 'ORIGINS', 'BYE'];
 
 var phrases = {
   'NAME': [
@@ -9,6 +7,11 @@ var phrases = {
     'Comment t\'appelles-tu?',
     'Qui est-tu?'
     //'Comment est-ce que vous vous appelez',
+  ],
+  'FEELING': [
+    'Comment allez-vous?',
+    'Comment vas-tu?',
+    'ça va?'
   ],
   'AGE': [
     'Quel âge avez-vous',
@@ -30,6 +33,11 @@ var phrases = {
     "Où avez-vous grandi",
     "Quelle est votre ville natale",
     "D'où viens-tu"
+  ],
+  'BYE': [
+    'Au revoir',
+    'À la prochaine',
+    'À plus'
   ]
 };
 
