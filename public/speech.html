@@ -37,6 +37,8 @@
       alert('Please use Google Chrome');
     }
 
+    var localData = {};
+
     window.onload = function() {
       if (!(window.webkitSpeechRecognition) && !(window.speechRecognition)){
         upgrade();
@@ -54,7 +56,7 @@
 
       speech.onstart = function(){
         recognizing = true;
-        document.getElementById('response').innerHTML = '';
+
       }
 
       speech.onresult = function(event){
@@ -80,18 +82,18 @@
 
       speech.onend = function (){
         recognizing = false;
+        localData.sent = spoken.innerHTML;
         if(spoken.innerHTML != ''){
           $.ajax({
             type: 'POST',
             url: 'http://' + window.location.host + '/process',
-            data: {
-              sent: spoken.innerHTML,
-              test: 'this is a test'
-            },
+            data: localData,
             success: function (data) {
+              alert(data)
               document.getElementById('response').innerHTML = JSON.stringify(JSON.parse(data).response);
               actualSpoken.innerHTML = spoken.innerHTML;
               spoken.innerHTML = '';
+              localData = JSON.parse(data);
               var offset = 0;
               var startSpan = "<span class=\"error\">";
               var endSpan = "</span>";

@@ -4,8 +4,8 @@ details = {
   'Pierre' : {
     name : 'Pierre',
     age :  17,
-    origin: 'Paris'
-    gender: 'male'
+    origin: 'Paris',
+    gender: 'male',
     occupation: 'étudiant'
   },
   'Jean' : {
@@ -25,7 +25,7 @@ details = {
   'Manon': {
     name: 'Manon',
     age: 45,
-    origin: 'Luxembourg'
+    origin: 'Luxembourg',
     gender: 'female',
     occupation: 'avocate'
   }

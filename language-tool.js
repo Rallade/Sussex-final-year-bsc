@@ -1,6 +1,7 @@
 var request = require("request");
 
 var checkGrammar = sent => {
+  console.log('Checking grammar');
   var options = {
     method: 'POST',
     url: 'https://languagetool.org/api/v2/check',

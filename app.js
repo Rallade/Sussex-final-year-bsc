@@ -54,11 +54,12 @@ var process2 = async (data) => {
 	data = parse_intent(data);
 	gen_intent(data);
 	gen_response(data);
- 	console.log(JSON.stringify(data, null, 4));
+ 	// console.log(JSON.stringify(data, null, 4));
 	return data;
 }
 
 function gen_intent(data){
+	console.log('Generating intent');
 	if (data.user_int.length == 0 && data.sys_int.length == 0){
 		data.sys_int.push(system_intents[0]);
 		data.sys_int.push(system_intents[1]);
@@ -76,6 +77,7 @@ function gen_intent(data){
 }
 
 function gen_response(data){
+	console.log('Generating response');
 	resp = ''
 	resp += answer_user(data.user_int).join(' ') + ' ';
   for (topic of data.sys_int){
@@ -98,6 +100,7 @@ function answer_user(user_int){
 }
 
 function parse_intent(data){
+	console.log('Parsing intent')
 	if(!data.completed_intents.includes('GREET')){
 		for (i = 0; i < greetings.length; i++){
 			if(data.sent.includes(greetings[i])){
@@ -129,14 +132,17 @@ function createResponse(data){
 
 }
 
-function createData(sent) {
-	return {
-		sent,
-		sys_int: [],
-		user_int: [],
-		completed_intents: [],
-		formality: 0
+function fillData(data) {
+	if(data.completed_intents == undefined){
+		data.completed_intents = [];
 	}
+	data.sys_int = [];
+	data.user_int = [];
+	data.grammar = [];
+	data.analysis = [];
+	data.response = [];
+	return data;
+
 }
 
 // data = {
@@ -152,6 +158,6 @@ function createData(sent) {
 // });
 
 
-module.exports.createData = createData;
+module.exports.fillData = fillData;
 module.exports.process = process;
 module.exports.process2 = process2;
