@@ -56,7 +56,6 @@
 
       speech.onstart = function(){
         recognizing = true;
-
       }
 
       speech.onresult = function(event){
@@ -89,7 +88,6 @@
             url: 'http://' + window.location.host + '/process',
             data: localData,
             success: function (data) {
-              alert(data)
               document.getElementById('response').innerHTML = JSON.stringify(JSON.parse(data).response);
               actualSpoken.innerHTML = spoken.innerHTML;
               spoken.innerHTML = '';

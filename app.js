@@ -46,6 +46,10 @@ function process(data){
 }
 
 var process2 = async (data) => {
+	if (data.completed_intents.length == 0){
+		data.character = characters.names[Math.floor(Math.random() * (characters.names.length+1))];
+		console.log(data.character, 'has been chosen');
+	}
 	grammar = await lt.checkGrammar(data.sent);
 	data.grammar = grammar;
 	data.sent = data.sent.toLowerCase();
@@ -54,6 +58,7 @@ var process2 = async (data) => {
 	data = parse_intent(data);
 	gen_intent(data);
 	gen_response(data);
+	createResponse(data)
  	// console.log(JSON.stringify(data, null, 4));
 	return data;
 }
@@ -84,7 +89,7 @@ function gen_response(data){
     data.completed_intents.push(topic)
     resp+=(topic + " ");
   }
-	data.response = resp;
+	data.template_response = resp;
   return(data);
 
 }
@@ -128,8 +133,37 @@ function parse_intent(data){
 }
 
 function createResponse(data){
-	components = data.response.split(" ");
-
+	components = data.template_response.split(" ");
+	response = "";
+	for (component of components) {
+		if (component.slice(-7) == '_ANSWER'){
+			topic = component.slice(0, -7);
+			details = characters.details[data.character];
+			if (topic == 'NAME') {
+				response += ("Je m'apelle " + details.name + " ");
+			} else if (topic == 'OCCUPATION') {
+				response += 'Je suis '
+				if(details.gender == 'female'){
+					response += ('une ' + details.occupation + " ");
+				} else if (details.gender == 'male') {
+					response += ('un ' + details.occupation + " ");
+				}
+			} else if(topic == 'AGE') {
+				response += ("J'ai " + details.age + ' ans ');
+			} else if (topic == 'ORIGINS'){
+				if(details.origin == 'Luxembourg'){
+					response += ('Je viens du ' + details.origin);
+				} else {
+					response += ('Je viens de ' + details.origin);
+				}
+				response += ' ';
+			}
+		} else {
+			response += component + ' ';
+		}
+	}
+	data.response = response;
+	return response;
 }
 
 function fillData(data) {
