@@ -136,30 +136,57 @@ function createResponse(data){
 	components = data.template_response.split(" ");
 	response = "";
 	for (component of components) {
+		details = characters.details[data.character];
 		if (component.slice(-7) == '_ANSWER'){
 			topic = component.slice(0, -7);
-			details = characters.details[data.character];
 			if (topic == 'NAME') {
-				response += ("Je m'apelle " + details.name + " ");
+				response += ("Je m'apelle " + details.name + ".");
 			} else if (topic == 'OCCUPATION') {
 				response += 'Je suis '
 				if(details.gender == 'female'){
-					response += ('une ' + details.occupation + " ");
+					response += ('une ' + details.occupation + ".");
 				} else if (details.gender == 'male') {
-					response += ('un ' + details.occupation + " ");
+					response += ('un ' + details.occupation + ".");
 				}
 			} else if(topic == 'AGE') {
-				response += ("J'ai " + details.age + ' ans ');
+				response += ("J'ai " + details.age + ' ans.');
 			} else if (topic == 'ORIGINS'){
 				if(details.origin == 'Luxembourg'){
 					response += ('Je viens du ' + details.origin);
 				} else {
 					response += ('Je viens de ' + details.origin);
 				}
-				response += ' ';
+				response += '.';
 			}
+			response += ' ';
 		} else {
-			response += component + ' ';
+			if (component == 'NAME') {
+				if(data.formality < 1){
+					response += details.name_question_formal;
+				} else {
+					response += details.name_question_informal;
+				}
+			} else if (component == 'OCCUPATION') {
+				if(data.formality < 1){
+					response += details.occupation_question_formal;
+				} else {
+					response += details.occupation_question_informal;
+				}
+			} else if(component == 'AGE') {
+				if(data.formality < 1){
+					response += details.age_question_formal;
+				} else {
+					response += details.age_question_informal;
+				}
+			} else if (component == 'ORIGINS'){
+				if(details.origin == 'Luxembourg'){
+					response += details.origin_question_formal;
+				} else {
+					response += details.origin_question_informal;
+				}
+			} else if (component == 'GREET') {
+				response += greetings[data.formality] + ' ';
+			}
 		}
 	}
 	data.response = response;
