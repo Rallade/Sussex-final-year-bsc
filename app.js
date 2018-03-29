@@ -65,14 +65,27 @@ var process2 = async (data) => {
 
 function gen_intent(data){
 	console.log('Generating intent');
-	if (data.user_int.length == 0 && data.sys_int.length == 0){
-		data.sys_int.push(system_intents[0]);
-		data.sys_int.push(system_intents[1]);
-	} else if (data.user_int.length > 0 && data.sys_int.length == 0) {
-		data.sys_int = JSON.parse(JSON.stringify(data.user_int)); //provides a deep copy of everything in the array
-	} else {
-		for (topic of data.user_int){
-			if(!data.completed_intents.includes(topic)){
+	// if (data.user_int.length == 0 && data.sys_int.length == 0){
+	// 	data.sys_int.push(system_intents[0]);
+	// 	data.sys_int.push(system_intents[1]);
+	// } else if (data.user_int.length > 0 && data.sys_int.length == 0 && !data.completed_intents.includes(topic)) {
+	// 	data.sys_int = JSON.parse(JSON.stringify(data.user_int)); //provides a deep copy of everything in the array
+	// } else {
+	// 	for (topic of data.user_int){
+	// 		if(!data.completed_intents.includes(topic)){
+	// 			data.sys_int.push(topic);
+	// 			break;
+	// 		}
+	// 	}
+	// }
+	for (topic of data.user_int){
+		if(!data.completed_intents.includes(topic)){
+			data.sys_int.push(topic);
+		}
+	}
+	if((data.sys_int.length == 1 && data.sys_int[0] == 'GREET') || data.sys_int.length == 0){
+		for (topic of system_intents){
+			if(!data.completed_intents.includes(topic) && topic != 'GREET'){
 				data.sys_int.push(topic);
 				break;
 			}
