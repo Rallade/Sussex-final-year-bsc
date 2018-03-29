@@ -25,7 +25,11 @@ var phrases = {
     'Où travaillez-vous',
     'Que fais-tu dans la vie',
     'Quel est ton emploi',
-    'Où travailles-tu'
+    'Où travailles-tu',
+    "Quel est votre métier?",
+    "Quel est ton métier?",
+    "Quel est votre profession?",
+    "Quel est ton profession?"
   ],
   'ORIGINS': [
     "D'où venez-vous",
