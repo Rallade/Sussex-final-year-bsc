@@ -8,7 +8,7 @@ var greetings = ['bonjour', 'salut', 'coucou'];
 
 var goodbyes = ['au revoir', 'salut' ,'à plus'];
 
-var system_intents = ['GREET', 'NAME', 'AGE', 'OCCUPATION', 'ORIGINS', 'BYE'];
+var system_intents = ['GREET', 'FEELING', 'NAME', 'AGE', 'OCCUPATION', 'ORIGINS', 'BYE'];
 
 var completed_intents = [];
 
@@ -47,7 +47,7 @@ function process(data){
 
 var process2 = async (data) => {
 	if (data.completed_intents.length == 0){
-		data.character = characters.names[Math.floor(Math.random() * (characters.names.length+1))];
+		data.character = characters.names[Math.floor(Math.random() * (characters.names.length))];
 		console.log(data.character, 'has been chosen');
 	}
 	grammar = await lt.checkGrammar(data.sent);
@@ -65,19 +65,6 @@ var process2 = async (data) => {
 
 function gen_intent(data){
 	console.log('Generating intent');
-	// if (data.user_int.length == 0 && data.sys_int.length == 0){
-	// 	data.sys_int.push(system_intents[0]);
-	// 	data.sys_int.push(system_intents[1]);
-	// } else if (data.user_int.length > 0 && data.sys_int.length == 0 && !data.completed_intents.includes(topic)) {
-	// 	data.sys_int = JSON.parse(JSON.stringify(data.user_int)); //provides a deep copy of everything in the array
-	// } else {
-	// 	for (topic of data.user_int){
-	// 		if(!data.completed_intents.includes(topic)){
-	// 			data.sys_int.push(topic);
-	// 			break;
-	// 		}
-	// 	}
-	// }
 	for (topic of data.user_int){
 		if(!data.completed_intents.includes(topic)){
 			data.sys_int.push(topic);
@@ -99,6 +86,9 @@ function gen_response(data){
 	resp = ''
 	resp += answer_user(data.user_int).join(' ') + ' ';
   for (topic of data.sys_int){
+		if (topic.slice(-9) == '_QUESTION'){
+			topic = topic.slice(0,-9)
+		}
     data.completed_intents.push(topic)
     resp+=(topic + " ");
   }
@@ -145,6 +135,10 @@ function parse_intent(data){
   return data;
 }
 
+function parse_info(data){
+
+}
+
 function createResponse(data){
 	components = data.template_response.split(" ");
 	response = "";
@@ -152,18 +146,18 @@ function createResponse(data){
 		details = characters.details[data.character];
 		if (component.slice(-7) == '_ANSWER'){
 			topic = component.slice(0, -7);
-			if (topic == 'NAME') {
+			if (topic.slice(0, 4) == 'NAME') {
 				response += ("Je m'apelle " + details.name + ".");
-			} else if (topic == 'OCCUPATION') {
+			} else if (topic.slice(0, 10) == 'OCCUPATION') {
 				response += 'Je suis '
 				if(details.gender == 'female'){
 					response += ('une ' + details.occupation + ".");
 				} else if (details.gender == 'male') {
 					response += ('un ' + details.occupation + ".");
 				}
-			} else if(topic == 'AGE') {
+			} else if(topic.slice(0, 3) == 'AGE') {
 				response += ("J'ai " + details.age + ' ans.');
-			} else if (topic == 'ORIGINS'){
+			} else if (topic.slice(0, 7) == 'ORIGINS'){
 				if(details.origin == 'Luxembourg'){
 					response += ('Je viens du ' + details.origin);
 				} else {
@@ -173,25 +167,25 @@ function createResponse(data){
 			}
 			response += ' ';
 		} else {
-			if (component == 'NAME') {
+			if (component == 'NAME_QUESTION') {
 				if(data.formality < 1){
 					response += details.name_question_formal;
 				} else {
 					response += details.name_question_informal;
 				}
-			} else if (component == 'OCCUPATION') {
+			} else if (component == 'OCCUPATION_QUESTION') {
 				if(data.formality < 1){
 					response += details.occupation_question_formal;
 				} else {
 					response += details.occupation_question_informal;
 				}
-			} else if(component == 'AGE') {
+			} else if(component == 'AGE_QUESTION') {
 				if(data.formality < 1){
 					response += details.age_question_formal;
 				} else {
 					response += details.age_question_informal;
 				}
-			} else if (component == 'ORIGINS'){
+			} else if (component == 'ORIGINS_QUESTION'){
 				if(details.origin == 'Luxembourg'){
 					response += details.origin_question_formal;
 				} else {
@@ -219,17 +213,17 @@ function fillData(data) {
 
 }
 
-// data = {
-//   sent: 'Quel âge avez-vous',
-//   sys_int: [],
-//   user_int: [],
-//   completed_intents: [],
-//   formality: 0
-// }
-//
-// process2(data).then((data2) => {
-//   console.log(data2)
-// });
+data = {
+  sent: "Je m'appelle Jean",
+  sys_int: [],
+  user_int: [],
+  completed_intents: [],
+  formality: 0
+}
+
+process2(data).then((data2) => {
+  console.log(data2)
+});
 
 
 module.exports.fillData = fillData;

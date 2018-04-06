@@ -1,7 +1,11 @@
 var user_intents = ['GREET', 'NAME', 'FEELING', 'AGE', 'OCCUPATION', 'ORIGINS', 'BYE'];
 
 var phrases = {
-  'NAME': [
+  'NAME':[
+    "Je m'appelle",
+    "Je suis"
+  ],
+  'NAME_QUESTION': [
     'Comment vous appelez-vous',
     'Qui êtes-vous',
     'Comment t\'appelles-tu?',
@@ -9,17 +13,28 @@ var phrases = {
     //'Comment est-ce que vous vous appelez',
   ],
   'FEELING': [
+    'Je me sens',
+    'Je vais'
+  ],
+  'FEELING_QUESTION': [
     'Comment allez-vous?',
     'Comment vas-tu?',
     'ça va?'
   ],
   'AGE': [
+    "J'ai  ans"
+  ],
+  'AGE_QUESTION': [
     'Quel âge avez-vous',
     'Quel est votre âge',
     'Quel âge as-tu',
     'Quel est ton âge'
   ],
   'OCCUPATION': [
+    "Je suis un",
+    "Je suis une"
+  ],
+  'OCCUPATION_QUESTION': [
     'Que faites-vous dans la vie',
     'Quel est votre emploi',
     'Où travaillez-vous',
@@ -32,6 +47,14 @@ var phrases = {
     "Quel est ton profession?"
   ],
   'ORIGINS': [
+    "Je viens de la",
+    "Je viens du",
+    "J'ai grandi au",
+    "J'ai grandi en",
+    "Je suis de la",
+    "Je suis"
+  ],
+  'ORIGINS_QUESTION': [
     "D'où venez-vous",
     "Où étiez-vous né",
     "Où avez-vous grandi",

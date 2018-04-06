@@ -14,7 +14,8 @@ details = {
     origin_question_formal: "Vous venez d'où?",
     origin_question_informal: "T'es d'où?",
     occupation_question_formal: "C'est quoi votre emploi?",
-    occupation_question_informal: "Tu bosses où?"
+    occupation_question_informal: "Tu bosses où?",
+    formality: 2
   },
   'Jean' : {
     name : 'Jean',
@@ -29,7 +30,8 @@ details = {
     origin_question_formal: "D'où êtes-vous originaire?",
     origin_question_informal: "D'où viens-tu?",
     occupation_question_formal: "Quel est votre métier?",
-    occupation_question_informal: "Où travailles-tu?"
+    occupation_question_informal: "Où travailles-tu?",
+    formality: 0
   },
   'Marie': {
     name: 'Marie',
@@ -44,7 +46,8 @@ details = {
     origin_question_formal: "D'où venez-vous?",
     origin_question_informal: "D'où est-ce que tu viens?",
     occupation_question_formal: "Où travaillez-vous?",
-    occupation_question_informal: "Tu fais quoi dans la vie?"
+    occupation_question_informal: "Tu fais quoi dans la vie?",
+    formality: 1
   },
   'Manon': {
     name: 'Manon',
@@ -59,7 +62,8 @@ details = {
     origin_question_formal: "Quel est votre lieu d'origine?",
     origin_question_informal: "Tu viens d'où?",
     occupation_question_formal: "Quel est votre profession?",
-    occupation_question_informal: "Quel est ton emploi?"
+    occupation_question_informal: "Quel est ton emploi?",
+    formality: 0
   }
 }
 
