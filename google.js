@@ -11,28 +11,23 @@ var questionMarkers = ['est-ce', 'comment', 'quel ', 'quelle ', ' quoi', 'pourqu
 
 console.log(sent);
 
-function analyze(sent) {
+async function analyze(sent) {
   var document = {
       content: sent,
       type: 'PLAIN_TEXT',
       language: 'fr'
   };
-  return client
-  	.analyzeSyntax({document})
-  	.then(results => {
-      const syntax = results[0];
-      return parse(syntax);
-  	}).catch(err => {
-  		console.error(err)
-  	});
+  let [syntax, entities] = await Promise.all([client.analyzeSyntax({document}), client.analyzeEntities({document})]);
+  let analysis = parseSyntax(syntax[0]);
+  analysis.entities = entities[0].entities;
+  console.log(analysis);
+  return analysis;
 }
 
-
-
-function parse(syntax){
+function parseSyntax(syntax){
   console.log('Parts of speech');
   shortened = []
-  analysis = {question: false}
+  syntax_analysis = {question: false}
   syntax.tokens.forEach(function(part) {
     //console.log(`${part.partOfSpeech.tag}: ${part.text.content}`);
     //console.log(`Morphology:`, part.partOfSpeech);
@@ -41,13 +36,13 @@ function parse(syntax){
     if(head.partOfSpeech.tag == 'VERB'){
       if(part.dependencyEdge.label == 'ADVMOD'){
         shortened.push(part.text.content);
-        analysis.modifier = part.text.content;
+        syntax_analysis.modifier = part.text.content;
       } else if (part.dependencyEdge.label == 'NSUBJ') {
         shortened.push(part.text.content);
-        analysis.subject = part.text.content;
+        syntax_analysis.subject = part.text.content;
         if(part.partOfSpeech.tag == 'PRON'){
           if(syntax.tokens.indexOf(head) < syntax.tokens.indexOf(part)){
-            analysis.question = true;
+            syntax_analysis.question = true;
           }
         }
       } else if (part.dependencyEdge.label == 'PRONL'){
@@ -56,7 +51,7 @@ function parse(syntax){
         shortened.push(part.text.content)
       } else if (part.dependencyEdge.label == 'DOBJ'){
         shortened.push(part.text.content);
-        analysis.topic = part.text.content;
+        syntax_analysis.topic = part.text.content;
       }
     }
     if (part.dependencyEdge.label == 'POSS'){
@@ -64,7 +59,7 @@ function parse(syntax){
       superHead = syntax.tokens[head.dependencyEdge.headTokenIndex];
       if (superHead.partOfSpeech.tag == 'VERB'){
         shortened.push(part.text.content)
-        analysis.topic = part.text.content
+        syntax_analysis.topic = part.text.content
       }
      }
     }
@@ -78,19 +73,20 @@ function parse(syntax){
     }
     if (part.partOfSpeech.tag == 'VERB' && part.dependencyEdge.label != 'MARK') {
       shortened.push(part.text.content);
-      analysis.verb = part.lemma;
+      syntax_analysis.verb = part.lemma;
     }
 
   });
   questionMarkers.forEach(function(mark){
     if(sent.toLowerCase().includes(mark)){
-      analysis.question = true;
+      syntax_analysis.question = true;
     }
   });
-  analysis.keywords = shortened;;
-  return new Promise(function(resolve, reject) {
-    resolve(analysis)
-  });
+  syntax_analysis.keywords = shortened;
+  // return new Promise(function(resolve, reject) {
+  //   resolve(syntax_analysis)
+  // });
+  return syntax_analysis;
 }
 
-module.exports.analyze = analyze
+module.exports.analyze = analyze;
