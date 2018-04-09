@@ -145,6 +145,7 @@ function createResponse(data){
 	for (component of components) {
 		details = characters.details[data.character];
 		if (component.slice(-7) == '_ANSWER'){
+			console.log("making statement", component);
 			topic = component.slice(0, -7);
 			if (topic.slice(0, 4) == 'NAME') {
 				response += ("Je m'apelle " + details.name + ".");
@@ -167,34 +168,27 @@ function createResponse(data){
 			}
 			response += ' ';
 		} else {
-			if (component == 'NAME_QUESTION') {
-				if(data.formality < 1){
-					response += details.name_question_formal;
+			console.log("making question", component, component.slice(0,-9).length)
+			if (component != "GREET" && component != 'BYE' && component.length > 1){
+				if (data.formality < 1) {
+					if(component.slice(-9) == '_QUESTION'){
+						response += details[component.slice(0,-9).toLowerCase() + '_question_formal'];
+					} else {
+						response += details[component.toLowerCase() + '_question_formal'];
+					}
 				} else {
-					response += details.name_question_informal;
-				}
-			} else if (component == 'OCCUPATION_QUESTION') {
-				if(data.formality < 1){
-					response += details.occupation_question_formal;
-				} else {
-					response += details.occupation_question_informal;
-				}
-			} else if(component == 'AGE_QUESTION') {
-				if(data.formality < 1){
-					response += details.age_question_formal;
-				} else {
-					response += details.age_question_informal;
-				}
-			} else if (component == 'ORIGINS_QUESTION'){
-				if(details.origin == 'Luxembourg'){
-					response += details.origin_question_formal;
-				} else {
-					response += details.origin_question_informal;
+					if(component.slice(-9) == '_QUESTION'){
+						response += details[component.slice(0,-9).toLowerCase() + '_question_informal'];
+					} else {
+						response += details[component.toLowerCase() + '_question_informal'];
+					}
 				}
 			} else if (component == 'GREET') {
 				response += greetings[data.formality] + ' ';
+			} else if (component == 'BYE') {
+				response += goodbyes[data.formality] + ' ';
 			}
-		}
+		 }
 	}
 	data.response = response;
 	return response;
@@ -213,17 +207,17 @@ function fillData(data) {
 
 }
 
-data = {
-  sent: "Je m'appelle Jean",
-  sys_int: [],
-  user_int: [],
-  completed_intents: [],
-  formality: 0
-}
-
-process2(data).then((data2) => {
-  console.log(data2)
-});
+// data = {
+//   sent: "Comment s'appelle votre chien?",
+//   sys_int: [],
+//   user_int: [],
+//   completed_intents: [],
+//   formality: 0
+// }
+//
+// process2(data).then((data2) => {
+//   console.log(data2)
+// });
 
 
 module.exports.fillData = fillData;
