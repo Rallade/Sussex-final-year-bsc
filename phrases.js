@@ -19,6 +19,8 @@ var phrases = {
   'FEELING_QUESTION': [
     'Comment allez-vous?',
     'Comment vas-tu?',
+    "Comment te sens-tu?",
+    "Comment vous sentez-vous?",
     'ça va?'
   ],
   'AGE': [
@@ -67,6 +69,20 @@ var phrases = {
     'À plus'
   ]
 };
+
+var verbs = {
+  'NAME': [
+    "être",
+    "suivre",
+    "appeler"
+  ],
+  'FEELING': [
+    'sentir',
+    'senser',
+    'aller'
+  ]
+
+}
 
 var invert = dict => {
   var inverse = {};

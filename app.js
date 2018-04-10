@@ -56,9 +56,10 @@ var process2 = async (data) => {
 	analysis = await google.analyze(data.sent)
 	data.analysis = analysis;
 	data = parse_intent(data);
+	parse_info(data);
 	gen_intent(data);
 	gen_response(data);
-	createResponse(data)
+	createResponse(data);
  	// console.log(JSON.stringify(data, null, 4));
 	return data;
 }
@@ -136,7 +137,36 @@ function parse_intent(data){
 }
 
 function parse_info(data){
-
+	if (data.user_details == null) {
+		data.user_details = {
+			'NAME': null,
+			'AGE': null,
+			'OCCUPATION': null,
+			'ORIGINS': null,
+			'GENDER': null
+		}
+	}
+	// for (intention of data.user_int) {
+	// 	if (intention == 'NAME' && data.analysis.subject == 'je'){
+	// 		data.user_details["NAME"] = data.analysis.topic;
+	// 	} else if (intention == 'AGE' && data.analysis.subject == 'je') {
+	// 		data.user_details["AGE"] = data.analysis.topic + " " + data.analysis.modifier;
+	// 	}
+	// }
+	question = data.completed_intents[data.completed_intents.length - 1];
+	console.log(`the user is answering ${question}`);
+	if (question == 'NAME' && data.analysis.subject == 'je'){
+		data.user_details["NAME"] = data.analysis.topic;
+	} else if (question == 'AGE' && data.analysis.subject == "j'") {
+		data.user_details["AGE"] = data.analysis.modifier + " " + data.analysis.topic;
+	} else if (question == "OCCUPATION") {
+		data.user_details["OCCUPATION"] = data.analysis.topic;
+	} else if (question == "FEELING" && data.analysis.subject == 'je') {
+		data.user_details["FEELING"] = data.analysis.modifier;
+	} else if (question == "ORIGINS"){
+		data.user_details["ORIGINS"] = data.analysis.topic;
+	}
+	return data;
 }
 
 function createResponse(data){
@@ -145,7 +175,6 @@ function createResponse(data){
 	for (component of components) {
 		details = characters.details[data.character];
 		if (component.slice(-7) == '_ANSWER'){
-			console.log("making statement", component);
 			topic = component.slice(0, -7);
 			if (topic.slice(0, 4) == 'NAME') {
 				response += ("Je m'apelle " + details.name + ".");
@@ -168,7 +197,6 @@ function createResponse(data){
 			}
 			response += ' ';
 		} else {
-			console.log("making question", component, component.slice(0,-9).length)
 			if (component != "GREET" && component != 'BYE' && component.length > 1){
 				if (data.formality < 1) {
 					if(component.slice(-9) == '_QUESTION'){
@@ -208,7 +236,7 @@ function fillData(data) {
 }
 
 // data = {
-//   sent: "Comment s'appelle votre chien?",
+//   sent: "J'ai 22 ans",
 //   sys_int: [],
 //   user_int: [],
 //   completed_intents: [],
