@@ -194,6 +194,10 @@ function createResponse(data){
 					response += ('Je viens de ' + details.origin);
 				}
 				response += '.';
+			} else if(topic.slice(0, 7) == 'FEELING'){
+				response += details.feeling + ". "
+				if (components.indexOf("GREET") > -1){
+				}
 			}
 			response += ' ';
 		} else {
@@ -211,7 +215,7 @@ function createResponse(data){
 						response += details[component.toLowerCase() + '_question_informal'];
 					}
 				}
-			} else if (component == 'GREET') {
+			} else if (component == 'GREET' && components.indexOf("FEELING_QUESTION_ANSWER") == -1) {
 				response += greetings[data.formality] + ' ';
 			} else if (component == 'BYE') {
 				response += goodbyes[data.formality] + ' ';
@@ -235,17 +239,17 @@ function fillData(data) {
 
 }
 
-// data = {
-//   sent: "J'ai 22 ans",
-//   sys_int: [],
-//   user_int: [],
-//   completed_intents: [],
-//   formality: 0
-// }
-//
-// process2(data).then((data2) => {
-//   console.log(data2)
-// });
+data = {
+  sent: "Mon chien est vert",
+  sys_int: [],
+  user_int: [],
+  completed_intents: [],
+  formality: 0
+}
+
+process2(data).then((data2) => {
+  console.log(data2)
+});
 
 
 module.exports.fillData = fillData;

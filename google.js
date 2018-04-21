@@ -41,7 +41,7 @@ function parseSyntax(syntax){
           syntax_analysis.modifier = previous.text.content;
         }
         shortened.push(part.text.content);
-        if(syntax_analysis.modifier.length > 1) {
+        if(syntax_analysis.modifier != null) {
           syntax_analysis.modifier +=  " " + part.text.content;
         } else {
           syntax_analysis.modifier = part.text.content;
