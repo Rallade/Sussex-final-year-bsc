@@ -52,14 +52,18 @@ var process2 = async (data) => {
 	}
 	grammar = await lt.checkGrammar(data.sent);
 	data.grammar = grammar;
-	data.sent = data.sent.toLowerCase();
-	analysis = await google.analyze(data.sent)
-	data.analysis = analysis;
-	data = parse_intent(data);
-	parse_info(data);
-	gen_intent(data);
-	gen_response(data);
-	createResponse(data);
+	if(data.freeSpeech == 'true'){
+			data.response = "";
+	} else {
+		data.sent = data.sent.toLowerCase();
+		analysis = await google.analyze(data.sent)
+		data.analysis = analysis;
+		data = parse_intent(data);
+		parse_info(data);
+		gen_intent(data);
+		gen_response(data);
+		createResponse(data);
+ 	}
  	// console.log(JSON.stringify(data, null, 4));
 	return data;
 }
@@ -155,9 +159,9 @@ function parse_info(data){
 	// }
 	question = data.completed_intents[data.completed_intents.length - 1];
 	console.log(`the user is answering ${question}`);
-	if (question == 'NAME' && data.analysis.subject == 'je'){
+	if (question == 'NAME'){
 		data.user_details["NAME"] = data.analysis.topic;
-	} else if (question == 'AGE' && data.analysis.subject == "j'") {
+	} else if (question == 'AGE') {
 		data.user_details["AGE"] = data.analysis.modifier + " " + data.analysis.topic;
 	} else if (question == "OCCUPATION") {
 		data.user_details["OCCUPATION"] = data.analysis.topic;
@@ -239,17 +243,17 @@ function fillData(data) {
 
 }
 
-data = {
-  sent: "Mon chien est vert",
-  sys_int: [],
-  user_int: [],
-  completed_intents: [],
-  formality: 0
-}
-
-process2(data).then((data2) => {
-  console.log(data2)
-});
+// data = {
+//   sent: "Mon chien est vert",
+//   sys_int: [],
+//   user_int: [],
+//   completed_intents: [],
+//   formality: 0
+// }
+//
+// process2(data).then((data2) => {
+//   console.log(data2)
+// });
 
 
 module.exports.fillData = fillData;

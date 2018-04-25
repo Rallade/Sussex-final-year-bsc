@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Web Speech API</title>
+    <title>Rohan Bhayana Final Year Project</title>
     <style>
       body {
         font-family: helvetica;
@@ -14,6 +14,9 @@
       }
       .error {
           background-color: #fc5944;
+      }
+      #interim {
+        color: gray;
       }
     </style>
   </head>
@@ -29,12 +32,27 @@
       <p>
         <span id="response"></span>
       </p>
+      <button type="button" id="switch_button" onclick="switchMode()">Speak freely</button>
     </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript">
     function upgrade() {
       alert('Please use Google Chrome');
+    }
+
+
+    function switchMode(){
+      if (localData.freeSpeech == "true"){
+        localData.freeSpeech = false;
+      } else {
+        localData.freeSpeech = true;
+      }
+      if (localData.freeSpeech){
+        document.getElementById("switch_button").innerHTML = "Go back to conversing"
+      } else {
+        document.getElementById("switch_button").innerHTML = "Speak Freely"
+      }
     }
 
     var localData = {};
