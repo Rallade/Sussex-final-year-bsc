@@ -56,8 +56,26 @@
     }
 
     var localData = {};
+    localData.freeSpeech = false;
+
+    var msg = new SpeechSynthesisUtterance();
+
+
+    window.speechSynthesis.onvoiceschanged = function() {
+      var voice_index;
+      var voices = window.speechSynthesis.getVoices();
+      for (voice of window.speechSynthesis.getVoices()){
+        if(voice.name == 'Google français'){
+          voice_index = window.speechSynthesis.getVoices().indexOf(voice);
+        }
+      }
+      msg.voice = voices[voice_index];
+      msg.rate = 1.1;
+    };
 
     window.onload = function() {
+
+
       if (!(window.webkitSpeechRecognition) && !(window.speechRecognition)){
         upgrade();
       }
@@ -106,9 +124,24 @@
             url: 'http://' + window.location.host + '/process',
             data: localData,
             success: function (data) {
-              document.getElementById('response').innerHTML = JSON.stringify(JSON.parse(data).response);
+              var response = document.getElementById('response');
+              response.innerHTML = JSON.parse(data).response;
+              if (JSON.parse(data).character == "Manon" || JSON.parse(data).character == "Marie"){
+                msg.text= JSON.parse(data).response;
+                if(JSON.parse(data).character == "Manon"){
+                  msg.pitch = 0.85;
+                } else {
+                  msg.pitch = 1.2;
+                }
+                speechSynthesis.speak(msg);
+              }
+              if (JSON.parse(data).response.length > 0){
+                response.innerHTML = JSON.parse(data).character + ": " + response.innerHTML;
+              }
               actualSpoken.innerHTML = spoken.innerHTML;
               spoken.innerHTML = '';
+
+
               localData = JSON.parse(data);
               var offset = 0;
               var startSpan = "<span class=\"error\">";
